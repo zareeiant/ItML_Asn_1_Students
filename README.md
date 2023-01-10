@@ -25,4 +25,4 @@ The end goal here is that someone should be able to clone your copy of this repo
 
 For this part, you need to create a predictive model using a tree-based model, and in doing so, aim for accuracy by limiting the overfitting of the model.
 
-This is very similar to the modelling we've done previously, the one big change is that now we want to implement some steps to combat overfitting. The steps you choose are up to you. 
+This is very similar to the modelling we've done previously, the one big change is that now we want to implement some steps to combat overfitting. The steps you choose are up to you, some things like editing hyperparameters or implementing pruning may be useful.
