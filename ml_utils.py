@@ -10,11 +10,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 plt.rcParams["figure.figsize"] = (8,8)
 
-def sklearn_to_df(sklearn_dataset):
-    df = pd.DataFrame(sklearn_dataset.data, columns=sklearn_dataset.feature_names)
-    df['target'] = pd.Series(sklearn_dataset.target)
-    return df
-
 class edaDF:
     """
     A class used to perform common EDA tasks
