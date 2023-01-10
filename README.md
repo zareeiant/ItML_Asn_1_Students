@@ -1,4 +1,5 @@
-# ItML_Asn_1_Students
+# Intro to Machine Learning_Assignment 1
+
 Repository for assignment 1 in the Intro to Machine Learning course. 
 
 ## Overview
