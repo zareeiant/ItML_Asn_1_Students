@@ -11,6 +11,14 @@ This assignment has two parts:
 
 The first task is to create a python utility file that contains a class that performs common data exploration steps in bulk. 
 
+For this part, please:
+ - Modify the class in the ml_utils.py file to create an EDA process that is useful for you.
+ - In modifying the utils file, also update the comments, so your file is properly documented.  
+ - Modify the eda_example.ipynb file to demonstrate your EDA.
+ - In the eda_example file, change/add text boxes to add whatever explaination your EDA needs. E.g. if you added the ability to choose between a histogram and a PDF being printed, explain how that works.
 
+The end goal here is that someone should be able to clone your copy of this repository, open the "eda_example.ipynb" file, click "Run All" and have the EDA process happen.
 
 ## Part 2 - Predictive Modelling with Trees
+
+For this part, you need to create a predictive model using a tree-based model, and in doing so, aim for accuracy by limiting the overfitting of the model.
