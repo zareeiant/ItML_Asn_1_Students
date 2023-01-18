@@ -1,5 +1,5 @@
-#count outliers, identify missisng values or zeroe, are there str in numrical col, 
-# describe for numrical, different plots, correlation
+#identify missisng values or zeroe, are there str in numrical col, 
+# describe for numrical, different plots
 
 import pandas as pd
 import numpy as np
@@ -7,7 +7,8 @@ import math
 import statistics as stats
 import sklearn.datasets
 import ipywidgets as widgets
-
+import thinkplot
+import thinkstats2
 ##Seaborn for fancy plots. 
 #%matplotlib inline
 import matplotlib.pyplot as plt
@@ -81,6 +82,18 @@ class edaDF:
     def info(self):
         return self.data.info()
 
+    def describe(self):
+        for col in self.num:
+            print(col)
+            print(self.data[col].describe())
+            print('\n \n')
+
+    def value_count(self):
+        for col in self.cat:
+            print(col)
+            print(self.data[col].value_counts())
+            print('\n \n')
+
     def giveTarget(self):
         return self.target
         
@@ -89,6 +102,13 @@ class edaDF:
     
     def setNum(self, numList):
         self.num = numList
+    def missing_values(self): 
+        for col in self.data:
+            print(col)
+            print('Before handling nan values:',self.data[col].count())
+            self.data[col]=self.data[col][~np.isnan(self.data[col])]
+            print('After handling nan values:',self.data[col].count())
+            
 
     def countPlots(self, splitTarg=False, show=True):
         n = len(self.cat)
@@ -129,25 +149,67 @@ class edaDF:
             figure.show()
         return figure
 
+    def displot(self,splitTarg=False, show=True):
+        for col in self.num:
+            #print("r:",r,"c:",c)
+            if splitTarg == False:
+                sns.displot(data=self.data, x=col,col=self.target,kind="kde")
+            if splitTarg == True:
+                sns.displot(data=self.data, x=col, hue=self.target, col=self.target,kind="kde")
+
+
+
+    def correlation(self, show=True):
+        data=self.data.apply(pd.to_numeric, errors='coerce')
+        data=data.drop(columns=self.cat)
+        data=data.corr()
+        mask=np.triu(np.ones_like(data, dtype=bool))
+        sns.heatmap(data, center=0, linewidths=0.5, annot=True, cmap="YlGnBu", yticklabels=True, mask=mask)
+        if show==True:
+            plt.show()
+        return plt 
+
+
+
+
     def find_outliers_IQR(self):
 
-        q1=self.data.quantile(0.25)
-        q3=self.data.quantile(0.75)
-        IQR=q3-q1
-        outliers = self.data[((self.data<(q1-1.5*IQR)) | (self.data>(q3+1.5*IQR)))]
-        return outliers
+        for col in self.num:
+
+            q1=self.data[col].quantile(0.25)
+            q3=self.data[col].quantile(0.75)
+            IQR=q3-q1
+            outliers = self.data[col][((self.data[col]<(q1-1.5*IQR)) | (self.data[col]>(q3+1.5*IQR)))]
+            print(col)
+            print('number of outliers: '+ str(len(outliers)))
+            print('max outlier value: '+ str(outliers.max()))
+            print('min outlier value: '+ str(outliers.min())+'\n')
+
+    #def remove_outliers(self):
+     #   for col in self.num:
+
 
     def fullEDA(self):
         out1 = widgets.Output()
         out2 = widgets.Output()
         out3 = widgets.Output()
         out4 = widgets.Output()
+        out5 = widgets.Output()
+        out6 = widgets.Output()
+        out7 = widgets.Output()
+        out8 = widgets.Output()
+        out9 = widgets.Output()
 
-        tab = widgets.Tab(children = [out1, out2, out3])
+        tab = widgets.Tab(children = [out1, out2, out3, out4,out5, out6, out7, out8, out9])
         tab.set_title(0, 'Info')
         tab.set_title(1, 'Categorical')
         tab.set_title(2, 'Numerical')
         tab.set_title(3, 'Outlier')
+        tab.set_title(4, 'Correlation')
+        tab.set_title(5, 'Displot')
+        tab.set_title(6, 'Describe')
+        tab.set_title(7, 'Value_count')
+        tab.set_title(8, 'Missing value')
         display(tab)
 
         with out1:
@@ -161,5 +223,16 @@ class edaDF:
             fig3 = self.histPlots(kde=True, show=False)
             plt.show(fig3)
         with out4:
-            outlier= self.find_outliers_IQR()
-            print(outlier)
+            self.find_outliers_IQR()
+        with out5:
+            fig4=self.correlation(show=False)
+            plt.show(fig4)
+        with out6:
+            fig5=self.displot(show=False)
+            plt.show(fig5)
+        with out7:
+            self.describe()
+        with out8:
+            self.value_count()
+        with out9:
+            self.missing_values()
