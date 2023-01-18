@@ -152,7 +152,11 @@ class edaDF:
     def pairplot(self,splitTarg=False, show=True):
 
         if splitTarg == False:
+<<<<<<< HEAD
             sns.pairplot(data=self.data, kind="reg")
+=======
+            sns.pairplot(data=self.data,col=self.target, kid="reg")
+>>>>>>> 2124329f797527b71e6f7ed032b0982b5ee4e43a
         if splitTarg == True:
             sns.pairplot(data=self.data, hue=self.target, col=self.target,kind="reg")
         if show==True:
