@@ -1,6 +1,10 @@
+#count outliers, identify missisng values or zeroe, are there str in numrical col, 
+# describe for numrical, different plots, correlation
+
 import pandas as pd
 import numpy as np
 import math
+import statistics as stats
 import sklearn.datasets
 import ipywidgets as widgets
 
@@ -125,6 +129,14 @@ class edaDF:
             figure.show()
         return figure
 
+    def find_outliers_IQR(self):
+
+        q1=self.data.quantile(0.25)
+        q3=self.data.quantile(0.75)
+        IQR=q3-q1
+        outliers = self.data[((self.data<(q1-1.5*IQR)) | (self.data>(q3+1.5*IQR)))]
+        return outliers
+
     def fullEDA(self):
         out1 = widgets.Output()
         out2 = widgets.Output()
@@ -135,6 +147,7 @@ class edaDF:
         tab.set_title(0, 'Info')
         tab.set_title(1, 'Categorical')
         tab.set_title(2, 'Numerical')
+        tab.set_title(3, 'Outlier')
         display(tab)
 
         with out1:
@@ -147,3 +160,6 @@ class edaDF:
         with out3:
             fig3 = self.histPlots(kde=True, show=False)
             plt.show(fig3)
+        with out4:
+            outlier= self.find_outliers_IQR()
+            print(outlier)
