@@ -1,6 +1,3 @@
-#identify missisng values or zeroe, are there str in numrical col, 
-# describe for numrical, different plots
-
 import pandas as pd
 import numpy as np
 import math
@@ -102,12 +99,14 @@ class edaDF:
     
     def setNum(self, numList):
         self.num = numList
+
     def missing_values(self): 
-        for col in self.data:
+        for col in self.num:
             print(col)
             print('Before handling nan values:',self.data[col].count())
-            self.data[col]=self.data[col][~np.isnan(self.data[col])]
+            self.data[col]=self.data[col].dropna(axis=0)
             print('After handling nan values:',self.data[col].count())
+            print('\n \n')
             
 
     def countPlots(self, splitTarg=False, show=True):
@@ -149,6 +148,19 @@ class edaDF:
             figure.show()
         return figure
 
+
+    def pairplot(self,splitTarg=False, show=True):
+
+        if splitTarg == False:
+            sns.pairplot(data=self.data,col=self.target, kid="reg")
+        if splitTarg == True:
+            sns.pairplot(data=self.data, hue=self.target, col=self.target,kind="reg")
+        if show==True:
+            plt.show()
+        return plt
+
+
+
     def displot(self,splitTarg=False, show=True):
         for col in self.num:
             #print("r:",r,"c:",c)
@@ -185,8 +197,6 @@ class edaDF:
             print('max outlier value: '+ str(outliers.max()))
             print('min outlier value: '+ str(outliers.min())+'\n')
 
-    #def remove_outliers(self):
-     #   for col in self.num:
 
 
     def fullEDA(self):
@@ -199,8 +209,9 @@ class edaDF:
         out7 = widgets.Output()
         out8 = widgets.Output()
         out9 = widgets.Output()
+        out10 = widgets.Output()
 
-        tab = widgets.Tab(children = [out1, out2, out3, out4,out5, out6, out7, out8, out9])
+        tab = widgets.Tab(children = [out1, out2, out3, out4,out5, out6, out7, out8, out9, out10])
         tab.set_title(0, 'Info')
         tab.set_title(1, 'Categorical')
         tab.set_title(2, 'Numerical')
@@ -210,6 +221,7 @@ class edaDF:
         tab.set_title(6, 'Describe')
         tab.set_title(7, 'Value_count')
         tab.set_title(8, 'Missing value')
+        tab.set_title(9, 'Pairplot')
         display(tab)
 
         with out1:
@@ -236,3 +248,7 @@ class edaDF:
             self.value_count()
         with out9:
             self.missing_values()
+        with out10:
+            fig6=self.pairplot()
+            plt.show(fig6)
+ 
