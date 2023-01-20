@@ -70,9 +70,11 @@ class edaDF:
     fullEDA()
         Displays the full EDA process. 
     """
-    def __init__(self, data, target):
+    def __init__(self, data, target, answer):
+
         self.data = data
         self.target = target
+        self.answer=answer
         self.cat = []
         self.num = []
 
@@ -149,12 +151,30 @@ class edaDF:
         return figure
 
 
+    def regplot(self, show=True):
+        n = len(self.num)
+        cols = 2
+        figure, ax = plt.subplots(math.ceil(n/cols), cols)
+        r = 0
+        c = 0
+        for col in self.num:
+            #print("r:",r,"c:",c)
+            sns.regplot(x=self.data[col], y=self.target, robust=True, data=self.data, n_boot=1000, x_jitter=.2, y_jitter=.2, ci=85,ax=ax[r][c])
+            c += 1
+            if c == cols:
+                r += 1
+                c = 0
+        if show == True:
+            figure.show()
+        return figure
+
+
     def pairplot(self,splitTarg=False, show=True):
 
         if splitTarg == False:
-            sns.pairplot(data=self.data,col=self.target, kid="reg")
+            sns.pairplot(data=self.data, kind="reg")
         if splitTarg == True:
-            sns.pairplot(data=self.data, hue=self.target, col=self.target,kind="reg")
+            sns.pairplot(data=self.data, hue=self.target,kind="reg")
         if show==True:
             plt.show()
         return plt
@@ -199,7 +219,8 @@ class edaDF:
 
 
 
-    def fullEDA(self):
+    def fullEDA(self, answer):
+        
         out1 = widgets.Output()
         out2 = widgets.Output()
         out3 = widgets.Output()
@@ -210,8 +231,9 @@ class edaDF:
         out8 = widgets.Output()
         out9 = widgets.Output()
         out10 = widgets.Output()
+        out11 = widgets.Output()
 
-        tab = widgets.Tab(children = [out1, out2, out3, out4,out5, out6, out7, out8, out9, out10])
+        tab = widgets.Tab(children = [out1, out2, out3, out4,out5, out6, out7, out8, out9, out10, out11])
         tab.set_title(0, 'Info')
         tab.set_title(1, 'Categorical')
         tab.set_title(2, 'Numerical')
@@ -222,6 +244,7 @@ class edaDF:
         tab.set_title(7, 'Value_count')
         tab.set_title(8, 'Missing value')
         tab.set_title(9, 'Pairplot')
+        tab.set_title(10, 'Regplot')
         display(tab)
 
         with out1:
@@ -249,6 +272,13 @@ class edaDF:
         with out9:
             self.missing_values()
         with out10:
-            fig6=self.pairplot()
-            plt.show(fig6)
+            if answer==True:
+                fig6=self.pairplot()
+                plt.show(fig6)
+            else:
+                pass
+        with out11: 
+            fig7=self.regplot(show=False)
+            plt.show(fig7)
+
  
